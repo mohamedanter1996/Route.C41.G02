@@ -9,12 +9,16 @@ using System.Threading.Tasks;
 
 namespace Route.C41.G02.DAL.Data
 {
-    internal class ApplicationDbContext: DbContext
+    public class ApplicationDbContext: DbContext
     {
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) :base(options)
         {
-            optionsBuilder.UseSqlServer("Server = SWD020526\\route ; Database = MVCApplicationGO2; Trusted_Connection = True ; TrustServerCertificate=Yes");
+            
         }
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    optionsBuilder.UseSqlServer("Server = . ; Database = MVCApplicationGO2; Trusted_Connection = True ; TrustServerCertificate=Yes");
+        //}
         public DbSet<Department> Departments { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
