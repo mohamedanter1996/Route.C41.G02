@@ -19,12 +19,12 @@ namespace Route.C41.G02.DAL.Data
         //{
         //    optionsBuilder.UseSqlServer("Server = . ; Database = MVCApplicationGO2; Trusted_Connection = True ; TrustServerCertificate=Yes");
         //}
-        public DbSet<Department> Departments { get; set; }
+      
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
+        public DbSet<Department> Departments { get; set; }
 
-      
     }
 }
