@@ -31,14 +31,36 @@ namespace Route.C41.G02.PL.Controllers
         {
             if (ModelState.IsValid)
             {
-                var Count= _departmentrepo.Add(department);
+                var Count = _departmentrepo.Add(department);
 
-                if (Count > 0) {
+                if (Count > 0)
+                {
                     return RedirectToAction("Index");
                 }
             }
 
             return View(department);
         }
+
+        [HttpGet]
+        public IActionResult Details(int? id)
+        {
+            if (!id.HasValue)
+            {
+                return BadRequest();//400
+            }
+
+            var department = _departmentrepo.Get(id.Value);
+
+            if (department == null)
+            {
+                return NotFound();//404
+            }
+
+            return View(department);
+        }
+
+
+
     }
 }
