@@ -13,7 +13,7 @@ namespace Route.C41.G02.PL.Controllers
         private IDepartmentRepository _departmentrepo;
         private readonly IWebHostEnvironment _env;
 
-        public DepartmentController(IDepartmentRepository departmentRepo , IWebHostEnvironment env)
+        public DepartmentController(IDepartmentRepository departmentRepo, IWebHostEnvironment env)
         {
             _departmentrepo = departmentRepo;
             _env = env;
@@ -84,9 +84,9 @@ namespace Route.C41.G02.PL.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute]int id,Department department)
+        public IActionResult Edit([FromRoute] int id, Department department)
         {
-            if(id !=department.Id)
+            if (id != department.Id)
             {
                 return BadRequest();
             }
@@ -119,6 +119,42 @@ namespace Route.C41.G02.PL.Controllers
 
             }
 
+        }
+
+        [HttpGet]
+        public IActionResult Delete(int id)
+        {
+            return Details(id, "Delete");
+        }
+
+        [HttpPost]
+        public IActionResult Delete(Department department)
+        {
+            try
+            {
+                _departmentrepo.Delete(department);
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                // 1. Log Exception
+                // 2. Friendly Message
+
+                if (_env.IsDevelopment())
+                {
+                    ModelState.AddModelError(string.Empty, ex.Message);
+
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "An Error Has Occurred during Deleting the Department");
+                }
+
+                return View(department);
+
+
+            }
         }
     }
 }
