@@ -25,9 +25,8 @@ namespace Route.C41.G02.DAL.Models
     }
 
 
-    public class Employee
+    public class Employee:ModelBase
     {
-        public int Id { get; set; }
 
         [Required]
         [MaxLength(50, ErrorMessage = "Max Length Of Name is 50 chars")]
