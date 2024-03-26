@@ -19,6 +19,10 @@ namespace Route.C41.G02.PL.Controllers
         }
         public IActionResult Index()
         {
+            ViewData["Message"] = "Hello ViewData";
+
+            ViewBag.Message = "Hello ViewBag";
+
             var employee = _employeeRepository.GetAll();
             return View(employee);
         }
