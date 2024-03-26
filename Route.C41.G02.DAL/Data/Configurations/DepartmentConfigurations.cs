@@ -16,6 +16,7 @@ namespace Route.C41.G02.DAL.Data.Configurations
             builder.Property(D => D.Id).UseIdentityColumn(10, 10);
             builder.Property(D => D.Name).HasColumnType("varchar").IsRequired().HasMaxLength(50);
             builder.Property(D => D.Code).HasColumnType("varchar").IsRequired().HasMaxLength(50);
+            builder.HasMany(D => D.Employees).WithOne(E=>E.Department).HasForeignKey(E=>E.DepartmentId).OnDelete(DeleteBehavior.Cascade);
 
         }
     }

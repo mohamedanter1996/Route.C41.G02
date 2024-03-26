@@ -21,11 +21,11 @@ namespace Route.C41.G02.DAL.Models
         [EnumMember(Value = "FullTime")]
         FullTime =1,
         [EnumMember(Value = "PartTime")]
-        PartTime =2
+        PartTime = 2
     }
 
 
-    public class Employee:ModelBase
+    public class Employee : ModelBase
     {
 
         [Required]
@@ -61,10 +61,12 @@ namespace Route.C41.G02.DAL.Models
 
         public Gender Gender { get; set; }
 
-        public EmpType EmployeeType { get; set; }    
+        public EmpType EmployeeType { get; set; }
         public DateTime CreationDate { get; set; } = DateTime.Now;
 
         public bool IsDeleted { get; set; } = false;
+        public int? DepartmentId { get; set; }
+        public Department Department { get; set; }  
 
     }
 }
