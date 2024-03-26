@@ -4,6 +4,7 @@ using Microsoft.Extensions.Hosting;
 using Route.C41.G02.BLL.Interfaces;
 using Route.C41.G02.DAL.Models;
 using System;
+using System.Security.Policy;
 
 namespace Route.C41.G02.PL.Controllers
 {
@@ -44,7 +45,11 @@ namespace Route.C41.G02.PL.Controllers
 
                 if (Count > 0)
                 {
+                    TempData["Message"] = "Department is Created Successfully";
                     return RedirectToAction("Index");
+                }else
+                {
+                    TempData["Message"] = "An Error Has Occured, Department Not Created: (";
                 }
             }
 
