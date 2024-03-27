@@ -5,7 +5,10 @@ using Route.C41.G02.BLL.Interfaces;
 using Route.C41.G02.DAL.Models;
 using System;
 using System.Linq;
+using AutoMapper;
 using System.Security.Policy;
+using System.Collections.Generic;
+using Route.C41.G02.PL.ViewModels;
 
 namespace Route.C41.G02.PL.Controllers
 {
@@ -13,12 +16,15 @@ namespace Route.C41.G02.PL.Controllers
     {
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IWebHostEnvironment _env;
+        private readonly IMapper _mapper;
+
         //private readonly IDepartmentRepository _departmentRepository;
 
-        public EmployeeController(IEmployeeRepository employeeRepository, IWebHostEnvironment env /*,IDepartmentRepository departmentRepository*/)
+        public EmployeeController(IEmployeeRepository employeeRepository, IWebHostEnvironment env /*,IDepartmentRepository departmentRepository*/, IMapper mapper)
         {
             _employeeRepository = employeeRepository;
             _env = env;
+           _mapper = mapper;
             //_departmentRepository = departmentRepository;
         }
         public IActionResult Index(string SearchInput)
@@ -34,9 +40,16 @@ namespace Route.C41.G02.PL.Controllers
             if (string.IsNullOrEmpty(SearchInput))
                 employee = _employeeRepository.GetAll();
             else
+            {
                 employee = _employeeRepository.SearchByName(SearchInput.ToLower());
+            }
+                
 
-            return View(employee);
+            // return View(employee);
+            var mappedEmp = _mapper.Map<IEnumerable<Employee>, IEnumerable<EmployeeViewModel>>(employee);
+
+
+            return View(mappedEmp);
         }
 
         [HttpGet]
@@ -50,12 +63,15 @@ namespace Route.C41.G02.PL.Controllers
 
         [HttpPost]
 
-        public IActionResult Create(Employee employee)
+        public IActionResult Create(EmployeeViewModel employeeVM)
         {
             if (ModelState.IsValid)
             {
-                var Count = _employeeRepository.Add(employee);
+                //var Count = _employeeRepository.Add(employee);
 
+                var mappedEmp = _mapper.Map<EmployeeViewModel, Employee>(employeeVM);
+
+                var Count = _employeeRepository.Add(mappedEmp);
                 if (Count > 0)
                 {
                     TempData["Message"] = "Department is Created Successfully";
@@ -66,7 +82,7 @@ namespace Route.C41.G02.PL.Controllers
                 }
             }
 
-            return View(employee);
+            return View(employeeVM);
         }
 
         [HttpGet]
@@ -78,13 +94,14 @@ namespace Route.C41.G02.PL.Controllers
             }
 
             var employee = _employeeRepository.Get(id.Value);
+            var mappedEmp = _mapper.Map<Employee, EmployeeViewModel>(employee);
 
             if (employee == null)
             {
                 return NotFound();//404
             }
 
-            return View(ViewName, employee);
+            return View(ViewName, mappedEmp);
         }
 
         [HttpGet]
@@ -106,20 +123,22 @@ namespace Route.C41.G02.PL.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute] int id, Employee employee)
+        public IActionResult Edit([FromRoute] int id, EmployeeViewModel employeeVM)
         {
-            if (id != employee.Id)
+            if (id != employeeVM.Id)
             {
                 return BadRequest();
             }
             if (!ModelState.IsValid)
             {
-                return View(employee);
+                return View(employeeVM);
             }
 
             try
             {
-                _employeeRepository.Update(employee);
+                var mappedEmp = _mapper.Map<EmployeeViewModel, Employee>(employeeVM);
+
+                _employeeRepository.Update(mappedEmp);
 
                 return RedirectToAction("Index");
             }
@@ -137,7 +156,7 @@ namespace Route.C41.G02.PL.Controllers
                     ModelState.AddModelError(string.Empty, "An Error Has Occurred during Updating the Employee");
                 }
 
-                return View(employee);
+                return View(employeeVM);
 
             }
 
@@ -150,11 +169,13 @@ namespace Route.C41.G02.PL.Controllers
         }
 
         [HttpPost]
-        public IActionResult Delete(Employee employee)
+        public IActionResult Delete(EmployeeViewModel employeeVM)
         {
             try
             {
-                _employeeRepository.Delete(employee);
+                var mappedEmp = _mapper.Map<EmployeeViewModel, Employee>(employeeVM);
+
+                _employeeRepository.Delete(mappedEmp);
 
                 return RedirectToAction(nameof(Index));
             }
@@ -173,7 +194,7 @@ namespace Route.C41.G02.PL.Controllers
                     ModelState.AddModelError(string.Empty, "An Error Has Occurred during Deleting the Employee");
                 }
 
-                return View(employee);
+                return View(employeeVM);
 
 
             }

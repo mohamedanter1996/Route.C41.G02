@@ -12,6 +12,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoMapper;
+using Route.C41.G02.PL.Helpers;
 
 namespace Route.C41.G01.PL
 {
@@ -42,6 +44,8 @@ namespace Route.C41.G01.PL
             //services.AddTransient<IEmployeeRepository, EmployeeRepository>();
 
             //services.AddSingleton<IEmployeeRepository, EmployeeRepository>();
+
+            services.AddAutoMapper(M => M.AddProfile(new MappingProfiles()));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
