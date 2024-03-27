@@ -46,11 +46,17 @@ namespace Route.C41.G02.BLL.Repositories
             ///     GenericType = _dbContext.Set<T>().Where(T => T.Id == id).FirstOrDefault();
             ///}
             ///return GenericType;
+
         }
 
         public IEnumerable<T> GetAll()
         {
-            return _dbContext.Set<T>().AsNoTracking().ToList();
+            // return _dbContext.Set<T>().AsNoTracking().ToList();
+
+            if (typeof(T) == typeof(Employee))
+                return (IEnumerable<T>)_dbContext.Employees.Include(E => E.Department).AsNoTracking().ToList();
+            else
+                return _dbContext.Set<T>().AsNoTracking().ToList();
         }
 
     }

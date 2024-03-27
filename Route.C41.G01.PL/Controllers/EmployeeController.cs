@@ -12,11 +12,13 @@ namespace Route.C41.G02.PL.Controllers
     {
         private readonly IEmployeeRepository _employeeRepository;
         private readonly IWebHostEnvironment _env;
+        //private readonly IDepartmentRepository _departmentRepository;
 
-        public EmployeeController(IEmployeeRepository employeeRepository, IWebHostEnvironment env)
+        public EmployeeController(IEmployeeRepository employeeRepository, IWebHostEnvironment env /*,IDepartmentRepository departmentRepository*/)
         {
             _employeeRepository = employeeRepository;
             _env = env;
+            //_departmentRepository = departmentRepository;
         }
         public IActionResult Index()
         {
@@ -31,6 +33,8 @@ namespace Route.C41.G02.PL.Controllers
         [HttpGet]
         public IActionResult Create()
         {
+            //ViewData["Departments"] = _departmentRepo.GetAll();
+            //ViewBag.Departments = _departmentRepo.GetAll();
             return View();
         }
 
