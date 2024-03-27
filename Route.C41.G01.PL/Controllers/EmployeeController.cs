@@ -4,6 +4,7 @@ using Microsoft.Extensions.Hosting;
 using Route.C41.G02.BLL.Interfaces;
 using Route.C41.G02.DAL.Models;
 using System;
+using System.Linq;
 using System.Security.Policy;
 
 namespace Route.C41.G02.PL.Controllers
@@ -20,13 +21,21 @@ namespace Route.C41.G02.PL.Controllers
             _env = env;
             //_departmentRepository = departmentRepository;
         }
-        public IActionResult Index()
+        public IActionResult Index(string SearchInput)
         {
-            ViewData["Message"] = "Hello ViewData";
+            /// ViewData["Message"] = "Hello ViewData";
+            ///
+            /// ViewBag.Message = "Hello ViewBag";
+            ///
+            /// var employee = _employeeRepository.GetAll();
+            /// return View(employee);
+            var employee = Enumerable.Empty<Employee>();
 
-            ViewBag.Message = "Hello ViewBag";
+            if (string.IsNullOrEmpty(SearchInput))
+                employee = _employeeRepository.GetAll();
+            else
+                employee = _employeeRepository.SearchByName(SearchInput.ToLower());
 
-            var employee = _employeeRepository.GetAll();
             return View(employee);
         }
 

@@ -7,8 +7,10 @@ using System.Threading.Tasks;
 
 namespace Route.C41.G02.BLL.Interfaces
 {
-    public interface IEmployeeRepository:IGenericRepository<Employee>
+    public interface IEmployeeRepository : IGenericRepository<Employee>
     {
         IQueryable<Employee> GetEmployeesByAddress(string Address);
+
+        IQueryable<Employee> SearchByName(string Name);
     }
 }
