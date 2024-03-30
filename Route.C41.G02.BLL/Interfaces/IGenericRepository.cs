@@ -13,10 +13,10 @@ namespace Route.C41.G02.BLL.Interfaces
 
         T Get(int id);
 
-        int Add(T Entity);
+        void Add(T Entity);
 
-        int Update(T Entity);
+        void Update(T Entity);
 
-        int Delete(T Entity);
+        void Delete(T Entity);
     }
 }

@@ -34,13 +34,13 @@ namespace Route.C41.G01.PL
             // services.AddScoped<DbContextOptions<ApplicationDbContext>>();
             services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddScoped<IDepartmentRepository, DepartmentRepository>();
+            //services.AddScoped<IDepartmentRepository, DepartmentRepository>();
 
 
             //services.AddSingleton<IDepartmentRepository, DepartmentRepository>();
             //services.AddTransient<IDepartmentRepository, DepartmentRepository>();
-            services.AddScoped<IEmployeeRepository, EmployeeRepository>();
-
+            //services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+            services.AddApplicationServices();
             //services.AddTransient<IEmployeeRepository, EmployeeRepository>();
 
             //services.AddSingleton<IEmployeeRepository, EmployeeRepository>();

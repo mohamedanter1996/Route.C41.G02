@@ -9,19 +9,26 @@ using AutoMapper;
 using System.Security.Policy;
 using System.Collections.Generic;
 using Route.C41.G02.PL.ViewModels;
+using Route.C41.G02.BLL.Repositories;
 
 namespace Route.C41.G02.PL.Controllers
 {
     public class EmployeeController : Controller
     {
-        private readonly IEmployeeRepository _employeeRepository;
+        private readonly IUnitOfWork _unitOfWork;
+
+        //private readonly IEmployeeRepository _employeeRepository;
         private readonly IWebHostEnvironment _env;
+        private readonly IMapper _mapper;
+
         //private readonly IDepartmentRepository _departmentRepository;
 
-        public EmployeeController(IEmployeeRepository employeeRepository, IWebHostEnvironment env/*, IDepartmentRepository departmentRepository*/)
+        public EmployeeController(IUnitOfWork unitOfWork,/*IEmployeeRepository employeeRepository,*/ IWebHostEnvironment env/*, IDepartmentRepository departmentRepository*/,IMapper mapper)
         {
-            _employeeRepository = employeeRepository;
+            _unitOfWork = unitOfWork;
+            //_employeeRepository = employeeRepository;
             _env = env;
+            _mapper = mapper;
             //_departmentRepository = departmentRepository;
         }
         public IActionResult Index(string SearchInput)
@@ -35,10 +42,10 @@ namespace Route.C41.G02.PL.Controllers
             var employee = Enumerable.Empty<Employee>();
 
             if (string.IsNullOrEmpty(SearchInput))
-                employee = _employeeRepository.GetAll();
+                employee = _unitOfWork.Repository<Employee>().GetAll();
             else
             {
-                employee = _employeeRepository.SearchByName(SearchInput.ToLower());
+                employee = (_unitOfWork.Repository<Employee>() as EmployeeRepository).SearchByName(SearchInput.ToLower());
             }
                 
 
@@ -67,7 +74,8 @@ namespace Route.C41.G02.PL.Controllers
 
                 var mappedEmp = _mapper.Map<EmployeeViewModel, Employee>(employeeVM);
 
-                var Count = _employeeRepository.Add(mappedEmp);
+                _unitOfWork.Repository<Employee>().Add(mappedEmp);
+                var Count = _unitOfWork.Complete();
                 if (Count > 0)
                 {
                     TempData["Message"] = "Department is Created Successfully";
@@ -89,7 +97,7 @@ namespace Route.C41.G02.PL.Controllers
                 return BadRequest();//400
             }
 
-            var employee = _employeeRepository.Get(id.Value);
+            var employee = _unitOfWork.Repository<Employee>().Get(id.Value);
             var mappedEmp = _mapper.Map<Employee, EmployeeViewModel>(employee);
 
             if (employee == null)
@@ -135,8 +143,8 @@ namespace Route.C41.G02.PL.Controllers
             {
                 var mappedEmp = _mapper.Map<EmployeeViewModel, Employee>(employeeVM);
 
-                _employeeRepository.Update(mappedEmp);
-
+                _unitOfWork.Repository<Employee>().Update(mappedEmp);
+                _unitOfWork.Complete();
                 return RedirectToAction("Index");
             }
             catch (Exception ex)
@@ -172,8 +180,8 @@ namespace Route.C41.G02.PL.Controllers
             {
                 var mappedEmp = _mapper.Map<EmployeeViewModel, Employee>(employeeVM);
 
-                _employeeRepository.Delete(mappedEmp);
-
+                _unitOfWork.Repository<Employee>().Delete(mappedEmp);
+                _unitOfWork.Complete();
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
