@@ -18,13 +18,13 @@ namespace Route.C41.G02.BLL.Repositories
         {
             _dbContext = dbContext;
         }
-        public void Add(T Entity)
+        public  void Add(T Entity)
         {
             _dbContext.Set<T>().Add(Entity);
            
         }
 
-        public void Delete(T Entity)
+        public  void Delete(T Entity)
         {
             _dbContext.Set<T>().Remove(Entity);
            
@@ -35,9 +35,9 @@ namespace Route.C41.G02.BLL.Repositories
             
         }
 
-        public T Get(int id)
+        public async Task<T> GetAsync(int id)
         {
-            return _dbContext.Find<T>(id);
+            return await _dbContext.FindAsync<T>(id);
             /// return _dbContext.Employees.Find(id);
             ///var GenericType = _dbContext.Set<T>().Local.Where(T => T.Id == id).FirstOrDefault();
             ///
@@ -49,13 +49,13 @@ namespace Route.C41.G02.BLL.Repositories
 
         }
 
-        public IEnumerable<T> GetAll()
+        public async Task<IEnumerable<T>> GetAllAsync()
         {
             if (typeof(T)==typeof(Employee)) 
             {
-                return (IEnumerable<T>)_dbContext.Set<Employee>().Include(E => E.Department).AsNoTracking().ToList();
+                return (IEnumerable<T>) await _dbContext.Set<Employee>().Include(E => E.Department).AsNoTracking().ToListAsync();
             }
-            else { return _dbContext.Set<T>().AsNoTracking().ToList(); }
+            else { return await _dbContext.Set<T>().AsNoTracking().ToListAsync(); }
            
         }
 

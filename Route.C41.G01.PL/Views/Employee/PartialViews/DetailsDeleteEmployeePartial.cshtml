@@ -1,7 +1,7 @@
 ﻿@model EmployeeViewModel
 @inject IUnitOfWork _UnitOfWork;
 @{
-    var Departments = new SelectList(_UnitOfWork.Repository<Department>().GetAll(), nameof(Department.Id), nameof(Department.Name));
+    var Departments = new SelectList(await _UnitOfWork.Repository<Department>().GetAllAsync(), nameof(Department.Id), nameof(Department.Name));
 }
 
 <div class="w-25 rounded-circle overflow-hidden m-auto">

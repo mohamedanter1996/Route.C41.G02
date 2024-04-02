@@ -5,6 +5,7 @@ using Route.C41.G02.BLL.Interfaces;
 using Route.C41.G02.BLL.Repositories;
 using Route.C41.G02.DAL.Models;
 using System;
+using System.Threading.Tasks;
 
 namespace Route.C41.G02.PL.Controllers
 {
@@ -21,9 +22,9 @@ namespace Route.C41.G02.PL.Controllers
             //_departmentrepo = departmentRepo;
             _env = env;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var department = _unitOfWork.Repository<Department>().GetAll();
+            var department = await _unitOfWork.Repository<Department>().GetAllAsync();
             return View(department);
         }
 
@@ -35,12 +36,12 @@ namespace Route.C41.G02.PL.Controllers
 
         [HttpPost]
 
-        public IActionResult Create(Department department)
+        public async Task<IActionResult> Create(Department department)
         {
             if (ModelState.IsValid)
             {
                  _unitOfWork.Repository<Department>().Add(department);
-                var Count = _unitOfWork.Complete();
+                var Count =await _unitOfWork.Complete();
                 if (Count > 0)
                 {
                     return RedirectToAction("Index");
@@ -51,14 +52,14 @@ namespace Route.C41.G02.PL.Controllers
         }
 
         [HttpGet]
-        public IActionResult Details(int? id, string ViewName = "Details")
+        public async Task<IActionResult> Details(int? id, string ViewName = "Details")
         {
             if (!id.HasValue)
             {
                 return BadRequest();//400
             }
 
-            var department = _unitOfWork.Repository<Department>().Get(id.Value);
+            var department =await _unitOfWork.Repository<Department>().GetAsync(id.Value);
 
             if (department == null)
             {
@@ -69,9 +70,9 @@ namespace Route.C41.G02.PL.Controllers
         }
 
         [HttpGet]
-        public IActionResult Edit(int? id)
+        public async Task<IActionResult> Edit(int? id)
         {
-            return Details(id.Value, "Edit");
+            return await Details(id.Value, "Edit");
             ///if (!id.HasValue)
             ///{
             ///    return BadRequest();
@@ -87,7 +88,7 @@ namespace Route.C41.G02.PL.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit([FromRoute] int id, Department department)
+        public async Task<IActionResult> Edit([FromRoute] int id, Department department)
         {
             if (id != department.Id)
             {
@@ -101,7 +102,7 @@ namespace Route.C41.G02.PL.Controllers
             try
             {
                 _unitOfWork.Repository<Department>().Update(department);
-                _unitOfWork.Complete();
+               await _unitOfWork.Complete();
                 return RedirectToAction("Index");
             }
             catch (Exception ex)
@@ -125,18 +126,18 @@ namespace Route.C41.G02.PL.Controllers
         }
 
         [HttpGet]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            return Details(id, "Delete");
+            return await Details(id, "Delete");
         }
 
         [HttpPost]
-        public IActionResult Delete(Department department)
+        public async Task<IActionResult> Delete(Department department)
         {
             try
             {
                 _unitOfWork.Repository<Department>().Delete(department);
-                _unitOfWork.Complete();
+              await  _unitOfWork.Complete();
 
                 return RedirectToAction(nameof(Index));
             }
