@@ -10,6 +10,7 @@ using System.Security.Policy;
 using System.Collections.Generic;
 using Route.C41.G02.PL.ViewModels;
 using Route.C41.G02.BLL.Repositories;
+using Route.C41.G02.PL.Helpers;
 
 namespace Route.C41.G02.PL.Controllers
 {
@@ -71,18 +72,19 @@ namespace Route.C41.G02.PL.Controllers
             if (ModelState.IsValid)
             {
                 //var Count = _employeeRepository.Add(employee);
+                    employeeVM.ImageName=DocumentSettings.UploadFile(employeeVM.Image, "images");
 
                 var mappedEmp = _mapper.Map<EmployeeViewModel, Employee>(employeeVM);
-
+             
                 _unitOfWork.Repository<Employee>().Add(mappedEmp);
                 var Count = _unitOfWork.Complete();
                 if (Count > 0)
                 {
-                    TempData["Message"] = "Department is Created Successfully";
+                   // TempData["Message"] = "Department is Created Successfully";
                     return RedirectToAction("Index");
                 }else
                 {
-                    TempData["Message"] = "An Error Has Occured, Department Not Created: (";
+                  //  TempData["Message"] = "An Error Has Occured, Department Not Created: (";
                 }
             }
 

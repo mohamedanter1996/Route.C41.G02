@@ -59,6 +59,7 @@ namespace Route.C41.G02.DAL.Models
 
         public EmpType EmployeeType { get; set; }
         
+        public string ImageName { get; set; }
         public int? DepartmentId { get; set; }
         public Department Department { get; set; }  
 
