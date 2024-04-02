@@ -3,6 +3,11 @@
 @{
     var Departments = new SelectList(_UnitOfWork.Repository<Department>().GetAll(), nameof(Department.Id), nameof(Department.Name));
 }
+
+<div class="w-25 rounded-circle overflow-hidden m-auto">
+    <img src="~/files/images/@Model.ImageName" class="w-100"  alt="@Model.Name"/>
+</div>
+
 <div class="form-group">
     <label class="col-form-label" asp-for="Name"></label>
     <input asp-for="Name" class="form-control" readonly />
