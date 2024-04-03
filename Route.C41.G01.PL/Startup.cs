@@ -14,6 +14,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using Route.C41.G02.PL.Helpers;
+using Microsoft.AspNetCore.Identity;
+using Route.C41.G02.DAL.Models;
+using Microsoft.Extensions.Options;
 
 namespace Route.C41.G01.PL
 {
@@ -46,6 +49,30 @@ namespace Route.C41.G01.PL
             //services.AddSingleton<IEmployeeRepository, EmployeeRepository>();
 
             services.AddAutoMapper(M => M.AddProfile(new MappingProfiles()));
+
+            //services.AddScoped<UserManager<ApplicationUser>>();
+            //services.AddScoped<SignInManager<ApplicationUser>>();
+            //services.AddScoped<RoleManager<IdentityRole>>();
+
+            services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            {
+                options.Password.RequiredUniqueChars = 2;
+                options.Password.RequireDigit = true;
+                options.Password.RequireNonAlphanumeric = true;
+                options.Password.RequireUppercase = true;
+                options.Password.RequireLowercase = true;
+                options.Password.RequiredLength = 5;
+
+                options.Lockout.AllowedForNewUsers = true;
+                options.Lockout.MaxFailedAccessAttempts = 5;
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromDays(5);
+
+                options.User.RequireUniqueEmail = true;
+
+            }
+            ).AddEntityFrameworkStores<ApplicationDbContext>();
+            //services.AddAuthentication();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
